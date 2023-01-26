@@ -36,7 +36,6 @@ const subscription = new rcl.Subscription(
 const publishedMessage = new std_msgs.Int8Message({ data: 43 });
 await publisher.publish(publishedMessage);
 const takenMessage = await subscription.take() as std_msgs.Int8Message;
-assertEquals(takenMessage.data, publishedMessage.data);
 
 publisher.fini(node);
 subscription.fini(node);

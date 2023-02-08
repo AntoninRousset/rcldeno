@@ -1,10 +1,10 @@
-import { lib, macros } from "./ffi/mod.ts";
+import { lib, macros } from "./ffi/rcl/mod.ts";
 
 import type { Context } from "./context.ts";
 import type { NodeOptions } from "./nodeOptions.ts";
 
 export class Node {
-  private handle: Uint8Array;
+  private handle: ArrayBuffer;
 
   constructor(
     name: string,
@@ -12,7 +12,7 @@ export class Node {
     context: Context,
     options: NodeOptions,
   ) {
-    this.handle = lib.symbols.rcl_get_zero_initialized_node() as Uint8Array;
+    this.handle = lib.symbols.rcl_get_zero_initialized_node();
 
     const nameBuffer = new Uint8Array([...new TextEncoder().encode(name), 0]);
     const namespaceBuffer = new Uint8Array([
@@ -42,7 +42,7 @@ export class Node {
   get name(): string {
     const namePtr = lib.symbols.rcl_node_get_name(
       this.unsafeHandle,
-    ) as Deno.PointerValue;
+    );
     const namePtrView = new Deno.UnsafePointerView(namePtr);
     return namePtrView.getCString();
   }
@@ -50,7 +50,7 @@ export class Node {
   get namespace(): string {
     const namespacePtr = lib.symbols.rcl_node_get_namespace(
       this.unsafeHandle,
-    ) as Deno.PointerValue;
+    );
     const namespacePtrView = new Deno.UnsafePointerView(namespacePtr);
     return namespacePtrView.getCString();
   }

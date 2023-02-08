@@ -1,16 +1,16 @@
-import { lib, macros } from "./ffi/mod.ts";
+import { lib, macros } from "./ffi/rcl/mod.ts";
 
-import type { Message } from "./message.ts";
+import { Message } from "./interface.ts";
 import type { Node } from "./node.ts";
 import type { PublisherOptions } from "./publisherOptions.ts";
-import type { TypeSupport } from "./typeSupport.ts";
+import type { MsgTypeSupport } from "./typeSupport.ts";
 
-export class Publisher<M extends Message> {
-  private handle: Uint8Array;
+export class Publisher<MESSAGE extends Message> {
+  private handle: ArrayBuffer;
 
   constructor(
     node: Node,
-    typeSupport: TypeSupport<M>,
+    typeSupport: MsgTypeSupport<MESSAGE>,
     topicName: string,
     options: PublisherOptions,
   ) {
@@ -19,7 +19,7 @@ export class Publisher<M extends Message> {
       0,
     ]);
     this.handle = lib.symbols
-      .rcl_get_zero_initialized_publisher() as Uint8Array;
+      .rcl_get_zero_initialized_publisher();
     const ret = lib.symbols.rcl_publisher_init(
       this.unsafeHandle,
       node.unsafeHandle,
@@ -40,11 +40,11 @@ export class Publisher<M extends Message> {
     return Boolean(lib.symbols.rcl_publisher_is_valid(this.unsafeHandle));
   }
 
-  async publish(message: M) {
+  async publish(message: MESSAGE) {
     const ret = await lib.symbols.rcl_publish(
       this.unsafeHandle,
       message.unsafeHandle,
-      null, // TODO: allocation
+      null,
     );
     if (ret != macros.RCL_RET_OK) {
       throw `failed to publish message`;
@@ -54,7 +54,7 @@ export class Publisher<M extends Message> {
   get topicName(): string {
     const topicNamePtr = lib.symbols.rcl_publisher_get_topic_name(
       this.unsafeHandle,
-    ) as Deno.PointerValue;
+    );
     const topicNamePtrView = new Deno.UnsafePointerView(topicNamePtr);
     return topicNamePtrView.getCString();
   }

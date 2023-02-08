@@ -1,10 +1,10 @@
-import { lib, macros } from "./ffi/mod.ts";
+import { lib, macros } from "./ffi/rcl/mod.ts";
 
 export class Context {
-  private handle: Uint8Array;
+  private handle: ArrayBuffer;
 
   constructor() {
-    this.handle = lib.symbols.rcl_get_zero_initialized_context() as Uint8Array;
+    this.handle = lib.symbols.rcl_get_zero_initialized_context();
   }
 
   get unsafeHandle(): Deno.PointerValue {
@@ -16,7 +16,7 @@ export class Context {
   }
 
   get instanceId(): number {
-    return lib.symbols.rcl_context_get_instance_id(this.unsafeHandle) as number;
+    return lib.symbols.rcl_context_get_instance_id(this.unsafeHandle);
   }
 
   fini() {

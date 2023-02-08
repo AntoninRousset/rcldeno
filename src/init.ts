@@ -1,4 +1,4 @@
-import { lib, macros } from "./ffi/mod.ts";
+import { lib, macros } from "./ffi/rcl/mod.ts";
 
 import type { Context } from "./context.ts";
 import type { InitOptions } from "./initOptions.ts";

@@ -1,6 +1,6 @@
 import { assert, assertEquals } from "./deps.ts";
 import * as rcl from "../mod.ts";
-import * as std_msgs from "./std_msgs/mod.ts";
+import std_msgs from "./std_msgs/mod.ts";
 
 Deno.test("Subscription lifecycle", () => {
   const initOptions = new rcl.InitOptions();
@@ -10,11 +10,10 @@ Deno.test("Subscription lifecycle", () => {
   const nodeOptions = new rcl.NodeOptions();
   const node = new rcl.Node("test", "/ns", context, nodeOptions);
 
-  const typeSupport = new std_msgs.Int8TypeSupport();
   const options = new rcl.SubscriptionOptions();
   const subscription = new rcl.Subscription(
     node,
-    typeSupport,
+    std_msgs.msg.Int8,
     "chatter",
     options,
   );

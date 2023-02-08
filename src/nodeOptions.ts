@@ -1,10 +1,10 @@
-import { lib, macros } from "./ffi/mod.ts";
+import { lib, macros } from "./ffi/rcl/mod.ts";
 
 export class NodeOptions {
-  private handle: Uint8Array;
+  private handle: ArrayBuffer;
 
   constructor() {
-    this.handle = lib.symbols.rcl_node_get_default_options() as Uint8Array;
+    this.handle = lib.symbols.rcl_node_get_default_options();
   }
 
   get unsafeHandle(): Deno.PointerValue {

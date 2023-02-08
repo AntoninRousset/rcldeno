@@ -5,6 +5,6 @@ import * as msg from "./msg/mod.ts";
 import * as srv from "./srv/mod.ts";
 
 export default makeTypeSupports(
-  "std_msgs",
+  "tf2_msgs",
   { action, msg, srv },
 );

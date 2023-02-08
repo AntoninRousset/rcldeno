@@ -1,8 +1,8 @@
 import { assert, assertEquals } from "./deps.ts";
 import * as rcl from "../mod.ts";
-import std_msgs from "./std_msgs/mod.ts";
+import tf2_msgs from "./tf2_msgs/mod.ts";
 
-Deno.test("Publisher lifecycle", () => {
+Deno.test("Action client lifecycle", () => {
   const initOptions = new rcl.InitOptions();
   const context = new rcl.Context();
   rcl.init(Deno.args, initOptions, context);
@@ -10,17 +10,17 @@ Deno.test("Publisher lifecycle", () => {
   const nodeOptions = new rcl.NodeOptions();
   const node = new rcl.Node("test", "/ns", context, nodeOptions);
 
-  const options = new rcl.PublisherOptions();
-  const publisher = new rcl.Publisher(
+  const options = new rcl.ActionClientOptions();
+  const actionClient = new rcl.ActionClient(
     node,
-    std_msgs.msg.Int8,
-    "chatter",
+    tf2_msgs.action.LookupTransform,
+    "lookup_transform",
     options,
   );
-  assert(publisher.isValid());
-  assertEquals(publisher.topicName, "/ns/chatter");
+  assert(actionClient.isValid());
+  assertEquals(actionClient.actionName, "lookup_transform");
 
-  publisher.fini(node);
+  actionClient.fini(node);
 
   node.fini();
   nodeOptions.fini();

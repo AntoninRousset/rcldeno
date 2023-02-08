@@ -1,14 +1,14 @@
-import { lib, macros } from "./ffi/mod.ts";
+import { lib, macros } from "./ffi/rcl/mod.ts";
 
 export class InitOptions {
-  private handle: Uint8Array;
+  private handle: ArrayBuffer;
 
   constructor() {
-    this.handle = lib.symbols
-      .rcl_get_zero_initialized_init_options() as Uint8Array;
+    // TODO? allocator
+    this.handle = lib.symbols.rcl_get_zero_initialized_init_options();
     lib.symbols.rcl_init_options_init(
       this.unsafeHandle,
-      lib.symbols.rcutils_get_default_allocator() as Uint8Array,
+      lib.symbols.rcutils_get_default_allocator(),
     );
   }
 
